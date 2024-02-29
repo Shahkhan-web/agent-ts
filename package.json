@@ -1,0 +1,35 @@
+{
+  "name": "ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node app.ts",
+    "import": "ts-node import.ts",
+    "llama": "ts-node llama_app.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@angular/cli": "^17.2.2",
+    "@langchain/community": "^0.0.32",
+    "@langchain/core": "^0.1.33",
+    "@langchain/openai": "^0.0.14",
+    "@types/express": "^4.17.21",
+    "cors": "^2.8.5",
+    "esbuild": "^0.20.1",
+    "esbuild-node-externals": "^1.13.0",
+    "express": "^4.18.2",
+    "langchain": "^0.1.21",
+    "node-llama-cpp": "^2.8.8",
+    "pg": "^8.11.3",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.20"
+  }
+}
