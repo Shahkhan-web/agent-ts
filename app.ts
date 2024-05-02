@@ -14,7 +14,7 @@ import { dataSource } from "./config";
 import cors from 'cors';
 
 const corsOption = {
-    origin: ['http://localhost:8080'],
+    origin: ['http://localhost:8080','http://agent-ts.s3-website.ap-south-1.amazonaws.com','https://6z98ptwz-8080.inc1.devtunnels.ms','http://localhost:4200','https://sai.nuwatt.tech'],
 };
 dotenv.config();
 
@@ -54,7 +54,7 @@ const runconversation = async (input: string) => {
     });
 
     const llm = new ChatOpenAI({
-        modelName: "gpt-3.5-turbo-0125", temperature: 0, callbacks: [
+        modelName: "gpt-4-turbo", temperature: 0, maxTokens: 4096, callbacks: [
             {
                 handleLLMEnd(output) {
                     completionTokensArray.push(output.llmOutput?.tokenUsage.completionTokens)
@@ -66,33 +66,30 @@ const runconversation = async (input: string) => {
     const sqlToolKit = new SqlToolkit(db, llm);
     const tools = sqlToolKit.getTools();
 
-    const SQL_PREFIX = `You are an agent designed to interact with a SQL database.
-Given an input question, create a syntactically correct {dialect} query to run, then look at the results of the query and return the answer.
-Unless the user specifies a specific number of examples they wish to obtain, always limit your query to at most {top_k} results using the LIMIT clause.
-You can order the results by a relevant column to return the most interesting examples in the database.
-Never query for all the columns from a specific table, only ask for a the few relevant columns given the question.
-You have access to tools for interacting with the database.
-Only use the below tools.
-Only use the information returned by the below tools to construct your final answer.
-You MUST double check your query before executing it. If you get an error while executing a query, rewrite the query and try again.
-
-DO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the database.
-below is example of the data in the database
-mat    |                   name                   | plant | sloc | year | mon |   batch    |  proddat   |   expdat   |  qty   
-----------+------------------------------------------+-------+------+------+-----+------------+------------+------------+--------
-50511518|SUNBULAH OKRA EXTRA (20X400G)            |1411   |FRAS  |2023  |11   |2886010823   |20230801   |20250131    |197
-40474318|SUNBULAH SWEET CORN (12X400 G)|4580|EV23|2024|02|VG24010811|20240108|20250228|1
-55309312|FORZA CHOCOLATE 24X120ML|4530|4537|2024|02|0022032023|20230322|20240321|3
-55306412|CONE ZONE STRAWBERRY 12X500ML|1511|CKAS|2023|04|0026032023|20230326|20240325|10
-55309412|FORZA STRAWBERRY 24X120ML|4580|JV47|2024|01|0018052023|20230518|20240517|2
-55308812|FORZA VANILLA 12X500ML|4580|JV49|2024|01|0018052023|20230518|20240517|0.5
-55601336|AHMADTEA LONDON BLEND TEA(12X100X2G)|1411|FJAS|2024|01|24112023|20231124|20261124|100
-51701412|Sunbulah Whole Wheat Rusk (6 x 300g)|4580|RV36|2024|02|2122023|20231202|20241201|5
-51701312|Sunbulah Rusk Regular (12 x 50g)|1201|WCAS|2023|10|2082023|20230802|20240801|1
-51701212|Sunbulah Regular Rusk (6 x 300g)|4580|JV55|2024|02|2112023|20231102|20241101|0.5
-51701512|Sunbulah Whole Wheat Rusk (12 x 50g)|4500|4511|2024|02|2122023|20231202|20241201|1 
-
-If the question does not seem related to the database at all, just return "I don't know" as the answer.`;
+    const SQL_PREFIX = `You're SAI, you're designed to assist Sunbulah Group by incorporating advanced AI technologies to optimize workflows, increase efficiency, and prevent information silos. 
+	Created by Nuwatt Technovation, SAI is designed for professional and efficient interaction with Sqlite3 databases. 
+	Given an input question, create a syntactically correct {dialect} query to run, then look at the results of the query and return the answer.
+	Unless the user specifies a specific number of examples they wish to obtain, always limit your query to at most {top_k} results using the LIMIT claus up to 10.
+	You can order the results by a relevant column to return the most interesting examples in the database.
+	Never query for all the columns from a specific table, only ask for a the few relevant columns given the question.
+	Construct accurate SQL queries based on user questions, and interpret results to provide precise answers. 
+	Key features include schema awareness, optimization insights, security measures. 
+	Adhere to querying only necessary columns, limiting results to the top relevant entries, and ordering them by importance.
+	SAI checks each query for errors before execution and avoids DML operations. SAI maintains a formal yet friendly tone, ideal for corporate use. Make your responses very short and concise. Today's date is 30 April 2024.
+		
+this is the example data of the table for your better understanding:
+materialId|productName|plantId|storageLocation|yearOfReceiving|monthOfReceiving|batchId|productionDate type(date)|expiryDate type(date)|quantityTons
+42724736|SARY NATURAL HONEY  (12X500G)|4530|4533|2024|01|3024010098|20240113|20261213|87
+42714960|ALSHIFA ACACIA HONEY (12X250G) - GPI|1101|1AUW|2024|02|3024010121|20240128|20281228|330
+42715060|ALSHIFA ACACIA HONEY (12X500G) - GPI|1101|1AUW|2024|02|3024010121|20240122|20281222|110
+42734960|ALSHIFA GINGER IN PURE HONEY(6x250G)-KPL|1101|1AUW|2024|02|3024010122|20240125|20281228|44
+42726860|AL-SHIFA MANUKA HONEY (6x250G)MGO100+KPL|1101|1AUW|2024|02|3024010123|20240123|20281223|33
+42714660|ALSHIFA NATURAL HONEY  (12X500G) - GPI|1101|1AUW|2024|02|3024010132|20240128|20281228|284
+42717960|ALSHIFA NATURAL HONEY  (12X500G) - KPL|1101|1AUW|2024|02|3024010130|20240128|20281228|403
+42327260|ALSHIFA NATURAL HONEY  (12X500G) -QNF|4100|4102|2024|02|3024010137|20240129|20281229|534
+32170960|ALSHIFA NATURAL HONEY  (15x250G) - AS&AF|1101|1AUW|2024|02|3024020198|20240213|20290113|86
+42737236|ALSHIFA NATURAL HONEY  (4X3KG) RV|4580|EV34|2024|02|4524010120|20240120|20261220|1
+`;
     const SQL_SUFFIX = `Begin!
 
 Question: {input}
@@ -106,7 +103,7 @@ Thought: I should look at the tables in the database to see what I can query.
     ]);
     const newPrompt = await prompt.partial({
         dialect: sqlToolKit.dialect,
-        top_k: "10",
+        top_k: "100",
     });
     const runnableAgent = await createOpenAIToolsAgent({
         llm,
@@ -138,6 +135,7 @@ app.post('/chat', async (req, res) => {
     const totalCost: number = calculateCost(completionTokensArray, promptTokensArray);
     completionTokensArray = [];
     promptTokensArray = [];
+    console.log(response)
     res.send({ ...response, cost: totalCost.toFixed(10) });
 });
 

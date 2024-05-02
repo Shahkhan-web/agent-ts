@@ -30,7 +30,7 @@ const importJsonFromFile = async () => {
                 body: JSON.stringify({
                     "Mat": "50487624",
                     "Plant": "4580",
-                    "Sloc": "",
+                    "Sloc": "SV13",
                     "Year": "",
                     "Mon": "",
                     "Batch": "",
@@ -51,7 +51,15 @@ const importJsonFromFile = async () => {
         }
     }
 }
-
+function addDash(str:any) {
+    if (str.length >= 6) {
+        return str.slice(0, 4) + "-" + str.slice(4, 6) + "-" + str.slice(6);
+    } else if (str.length >= 4) {
+        return str.slice(0, 4) + "-" + str.slice(4);
+    } else {
+        return str;
+    }
+}
 const storeData = async () => {
     if (!connection.isConnected) {
         await connection.connect();
@@ -62,16 +70,17 @@ const storeData = async () => {
         for (const item of data.d.itemdetset.results) {
             console.log('items:', item)
             const product = new Product();
-            product.mat = item.Mat || "N/A";
-            product.name = item.Name || "N/A";
-            product.plant = item.Plant || "N/A";
-            product.sloc = item.Sloc || "N/A";
-            product.year = item.Year || "N/A";
-            product.mon = item.Mon || "N/A";
-            product.batch = item.Batch || "N/A";
-            product.proddat = item.ProdDat || "N/A";
-            product.expdat = item.ExpDat || "N/A";
-            product.qty = item.Qty || "N/A";
+            product.materialId = item.Mat || "N/A";
+            product.productName = item.Name || "N/A";
+            product.plantId = item.Plant || "N/A";
+            product.storageLocation = item.Sloc || "N/A";
+            product.yearOfReceiving = item.Year || "N/A";
+            product.monthOfReceiving = item.Mon || "N/A";
+            product.batchId = item.Batch || "N/A";
+
+            product.productionDate = addDash(item.ProdDat) || "N/A";
+            product.Expiry_date = addDash(item.ExpDat) || "N/A";            
+product.quantityTons = item.Qty || "N/A";
 
             console.log("Storing data:", product);
             try {

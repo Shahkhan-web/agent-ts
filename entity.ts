@@ -9,32 +9,32 @@ import 'reflect-metadata'
   @Entity()
   export class Product {
     @PrimaryColumn({ type: 'varchar', length: 255, nullable: false })
-    mat: string;
+    materialId: string;
   
     @Column({ type: 'varchar', length: 255, nullable: false })
-    name: string;
+    productName: string;
   
     @Column({ type: 'varchar', length: 255, nullable: false })
-    plant: string;
+    plantId: string;
   
     @Column({ type: 'varchar', length: 255, nullable: false })
-    sloc: string;
+    storageLocation: string;
   
     @Column({ type: 'varchar', length: 4, nullable: false })
-    year: string;
+    yearOfReceiving: string;
   
     @Column({ type: 'varchar', length: 2, nullable: false })
-    mon: string;
+    monthOfReceiving: string;
   
     @Column({ type: 'varchar', length: 255, nullable: false })
-    batch: string;
+    batchId: string;
   
     @Column({ type: 'date', nullable: false })
-    proddat: Date;
+    productionDate: Date;
   
     @Column({ type: 'date', nullable: false })
-    expdat: Date;
+    Expiry_date: Date;
   
     @Column({ type: 'numeric', nullable: false })
-    qty: number;
+    quantityTons: number;
   }
