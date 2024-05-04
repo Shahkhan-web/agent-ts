@@ -6,7 +6,9 @@
   "scripts": {
     "start": "ts-node app.ts",
     "import": "ts-node import.ts",
-    "llama": "ts-node llama_app.ts"
+    "llama": "ts-node llama_app.ts",
+    "build":"rm -rf dist && node esbuild.config.js "
+
   },
   "keywords": [],
   "author": "",

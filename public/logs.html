@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Log Viewer</title>
+<script>
+window.onload = () => {
+    const eventSource = new EventSource('/logs');
+    const logContainer = document.getElementById('log');
+
+    eventSource.onmessage = function(event) {
+        // Append new log data to the container
+        const newLogEntry = document.createElement('div');
+        newLogEntry.textContent = event.data;
+        logContainer.appendChild(newLogEntry);
+
+        // Automatically scroll to the bottom
+        logContainer.scrollTop = logContainer.scrollHeight;
+    };
+};
+</script>
+<style>
+    #log {
+        height: 600px;  /* Adjust height as needed */
+        overflow-y: auto; /* Ensures scrollbar */
+        background-color: #f4f4f4; /* Light grey background */
+        border: 1px solid #ddd; /* Grey border */
+        padding: 8px; /* Padding around text */
+        white-space: pre-wrap; /* Maintains whitespace */
+    }
+</style>
+</head>
+<body>
+    <h1>Log Viewer</h1>
+    <div id="log"></div>
+</body>
+</html>
