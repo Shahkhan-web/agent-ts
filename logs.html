@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log Stream</title>
+</head>
+<body>
+    <h1>Live Log Stream</h1>
+    <pre id="log"></pre>
+    <script>
+        const eventSource = new EventSource('/logs');
+        eventSource.onmessage = function(event) {
+            const log = document.getElementById('log');
+            log.textContent += event.data + '\n';
+        };
+        eventSource.onerror = function(event) {
+            console.error('EventSource failed');
+            eventSource.close();
+        };
+    </script>
+</body>
+</html>

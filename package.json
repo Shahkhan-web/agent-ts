@@ -7,8 +7,7 @@
     "start": "ts-node app.ts",
     "import": "ts-node import.ts",
     "llama": "ts-node llama_app.ts",
-    "build":"rm -rf dist && node esbuild.config.js "
-
+    "build": "rm -rf dist && node esbuild.config.js "
   },
   "keywords": [],
   "author": "",
@@ -32,6 +31,7 @@
     "node-llama-cpp": "^2.8.8",
     "pg": "^8.11.3",
     "sqlite3": "^5.1.7",
+    "tail": "^2.2.6",
     "typeorm": "^0.3.20"
   }
 }

@@ -36,7 +36,7 @@ import 'reflect-metadata'
     Expiry_date: Date;
   
     @Column({ type: 'numeric', nullable: false })
-    quantityTons: number;
+    quantity: number;
   }
 
 @Entity()
